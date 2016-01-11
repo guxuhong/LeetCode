@@ -25,21 +25,18 @@ class Solution(object):
         :type wordList: Set[str]
         :rtype: int
         """
-        def oneDiffer(w1, w2):
-            count = 0
-            for i in range(len(w1)):
-                if w1[i] != w2[i]:
-                    count += 1
-            if count == 1:
-                return True
-            return False
-        levelvalues, level, used = [[beginWord]], 0, set()
-        while True:
-            levelvalues.append([])
-            for t in levelvalues[level]:
-                if t == endWord:
-                    return level + 2
-                used.add(t)
-                for word in wordList:
-                    if word not in used and oneDiffer(word, t):
-                        levelvalues[level+1].append(word)
+        wordList.add(endWord)
+        q = []
+        q.append((beginWord, 1))
+        while q:
+            current = q.pop(0)
+            currentword, currentstep = current[0], current[1]
+            if currentword == endWord:
+                return currentstep
+            for i in range(len(beginWord)):
+                for j in 'abcdefghijklmnopqrstuvwxyz':
+                    nextword = currentword[:i] + j + currentword[i+1:]
+                    if nextword in wordList and nextword != currentword:
+                        q.append((nextword, currentstep+1))
+                        wordList.remove(nextword)
+        return 0
